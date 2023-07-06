@@ -4,7 +4,7 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
-const fs = require('fs')
+const fs = require('fs');
 
 const PORT = 5000;
 
