@@ -5,22 +5,28 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
-
-const PORT = 5000;
+const dotenv = require('dotenv')
 
 const app = express();
+
+dotenv.config({ path:'./.env' })
+
+PORT = process.env.EXPRESS_PORT
+
 const con = mysql.createConnection({
-  host:"localhost",
-  user:"root",
-  password:"password",
-  database:"gymApp"
+  host: process.env.DATABASE_HOST,
+  user: process.env.DATABASE_USER,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE
 })
 
-app.use(cors({
-  origin:"http://localhost:3000"
-}));
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(
+  cors({
+    origin:"http://localhost:3000"
+  })
+)
 
 app.post('/exercises/search', (req, res) => {
   const name = req.body.search
@@ -28,7 +34,7 @@ app.post('/exercises/search', (req, res) => {
   request.get({
     url: `https://api.api-ninjas.com/v1/exercises?name=${name}`,
     headers: {
-      'X-Api-Key':'lRfrEwrin8NPlXodL/dM3g==W6iT0EaDccfb6bvX'
+      'X-Api-Key': process.env.X_API_KEY_EXERCISE
     },
   }, (error,response,body) => {
     if (error) return console.error('Request failed:', error);
@@ -174,4 +180,4 @@ app.get('/gym', (req, res) => {
   })
 });
 
-app.listen(PORT, () => console.log(`Server listening on port: ${PORT}`));
+app.listen(PORT || 5000, () => console.log(`Server listening on port: ${PORT}`));
